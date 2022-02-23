@@ -14,7 +14,7 @@ jwt = JWT(app,authenticate,identity) # /auth
 items = []
 
 class Item(Resource):
-    @jwt_required()
+    #@jwt_required()
     def get(self,name):
         item = next(filter(lambda x:x['name'] == name , items), None)
         return {'item':item} ,200 if item is not None else 404
@@ -27,6 +27,11 @@ class Item(Resource):
         new_item = {'name':name, 'price':data['price']}
         items.append(new_item)
         return new_item,201
+
+    def delete(self,name):
+        global items
+        items = list(filter(lambda x:x['name'] != name , items))
+        return {'message':'item deleted'}
 
 class ListItem(Resource):
     def get(self):
